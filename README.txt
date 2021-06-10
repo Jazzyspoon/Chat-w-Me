@@ -24,3 +24,4 @@ Page 2
 ● The chat interface and functionality must be created using the Gifted Chat library.
 ● The app’s codebase must contain comments.
 
+This app was created for the Career Foundry Full Stack Web Developer program

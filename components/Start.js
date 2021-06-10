@@ -19,7 +19,7 @@ export default class Start extends React.Component {
         name: "",
       });
   }
-
+  // set the color and user name when chat button is pressed.
   onPressChat = (name, backgroundColor) => {
     if (name == "") {
       return Alert.alert("Please Enter a Name .");
@@ -39,8 +39,9 @@ export default class Start extends React.Component {
           <View style={styles.boxspace2}>
             <Text style={styles.texttitle}>Chat w/Me</Text>
           </View>
+          {/* added views for spacing */}
           <View style={styles.boxSpace1}></View>
-
+          {/* main box holding inputs and buttons */}
           <View style={styles.box2}>
             <View>
               <TextInput
@@ -64,6 +65,7 @@ export default class Start extends React.Component {
             <View>
               <Text style={styles.choose}>Choose background Color:</Text>
             </View>
+            {/* row of buttons for screen color choices */}
             <View style={styles.rowofbuttons}>
               <TouchableOpacity
                 accessible={true}
@@ -105,24 +107,24 @@ export default class Start extends React.Component {
 
             {/* Button to navigate to chat screen and load name state to chat screen*/}
             <View>
-            <AwesomeButton
-              accessible={true}
-              accessibilityLabel="Start Chat"
-              accessibilityHint="start chatting"
-              textSize={16}
-              justifyContent="center"
-              width="100%"
-              fontWeight={600}
-              marginLeft={5}
-              backgroundColor="#757083"
-              height={50}
-              onPress={() =>
-                this.onPressChat(this.state.name, this.state.backgroundColor)
-              }
-              style={[styles.button]}
-            >
-              Start Chatting
-            </AwesomeButton>
+              <AwesomeButton
+                accessible={true}
+                accessibilityLabel="Start Chat"
+                accessibilityHint="start chatting"
+                textSize={16}
+                justifyContent="center"
+                width="100%"
+                fontWeight={600}
+                marginLeft={5}
+                backgroundColor="#757083"
+                height={50}
+                onPress={() =>
+                  this.onPressChat(this.state.name, this.state.backgroundColor)
+                }
+                style={[styles.button]}
+              >
+                Start Chatting
+              </AwesomeButton>
             </View>
           </View>
 
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     padding: 10,
-    width: "100%"
+    width: "100%",
   },
   blackbutton: {
     width: 55,
