@@ -1,18 +1,33 @@
 import React from "react";
 import { View, Text, Button, TextInput, StyleSheet } from "react-native";
-
+import AwesomeButton from "react-native-really-awesome-button";
 export default class Chat extends React.Component {
   render() {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Button
-          color="#007AFF"
-          title="Go to Start"
+      <View
+        style={{
+          flex: 2,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#090C08",
+        }}
+      >
+        {/* Button to navigate back to start screen - tab is mad eavailable */}
+        <AwesomeButton
+          marginLeft="auto"
+          marginRight="auto"
+          textSize={20}
+          justifyContent="center"
+          width={190}
+          backgroundColor="green"
+          hieght={40}
           onPress={() => this.props.navigation.navigate("Start")}
-        ></Button>
+        >
+          Go To Start Screen
+        </AwesomeButton>
       </View>
     );
   }

@@ -12,6 +12,7 @@ export default class HelloWorld extends Component {
     return (
       <NavigationContainer>
         <Tab.Navigator initialRouteName="Start">
+          {/* import the screens we want to navigate to */}
           <Tab.Screen name="Start" component={Start} />
           <Tab.Screen name="Chat" component={Chat} />
         </Tab.Navigator>
