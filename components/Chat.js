@@ -3,8 +3,8 @@ import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 export default class Chat extends React.Component {
   render() {
-    let name = this.props.route.params.name;
-    this.props.navigation.setOptions({ title: name });
+    const { name } = this.props.route.params;
+    let backgroundColor = this.props.route.params.backgroundColor;
 
     return (
       <View
@@ -12,7 +12,7 @@ export default class Chat extends React.Component {
           flex: 2,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#090C08",
+          backgroundColor: backgroundColor,
         }}
       >
         {/* Button to navigate back to start screen - tab is mad eavailable */}

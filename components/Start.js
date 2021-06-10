@@ -1,23 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   View,
   Text,
-  Button,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
-import Logo from "../assets/person-outline.svg";
 import image from "../assets/backgroundimage.png";
 
 export default class Start extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { name: "" };
+    super(props),
+      (this.state = {
+        backgroundColor: "",
+        name: "",
+      });
   }
 
+  onPressChat = (name, backgroundColor) => {
+    if (name == "") {
+      console.log(name);
+      return Alert.alert("Please Enter a Name .");
+    }
+    this.props.navigation.navigate("Chat", {
+      name: `${name}`,
+      backgroundColor: `${backgroundColor}`,
+    });
+  };
   //start screen with username creation
   render() {
     return (
@@ -43,29 +55,50 @@ export default class Start extends React.Component {
                   color: "black",
                   fontWeight: "300",
                   fontSize: 16,
-                  opacity: "50%",
                 }}
                 onChangeText={(name) => this.setState({ name })}
                 value={this.state.name}
                 placeholder="Enter Your Name..."
-              >
-                <Logo />
-              </TextInput>
+              />
             </View>
             <View>
               <Text style={styles.choose}>Choose background Color:</Text>
             </View>
             <View style={styles.rowofbuttons}>
-              <TouchableOpacity title="dark" style={styles.blackbutton}>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel="Background color"
+                accessibilityHint="change the background color of chat message"
+                onPress={() => this.setState({ backgroundColor: "#090C08" })}
+                style={styles.blackbutton}
+              >
                 <Text></Text>
               </TouchableOpacity>
-              <TouchableOpacity title="br" style={styles.brownbutton}>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel="Background color"
+                accessibilityHint="Let’s you choose to change the background color of chat message"
+                onPress={() => this.setState({ backgroundColor: "#474056" })}
+                style={styles.brownbutton}
+              >
                 <Text></Text>
               </TouchableOpacity>
-              <TouchableOpacity title="gr" style={styles.greybutton}>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel="Background color"
+                accessibilityHint="Let’s you choose to change the background color of chat message"
+                onPress={() => this.setState({ backgroundColor: "#8A95A5" })}
+                style={styles.greybutton}
+              >
                 <Text></Text>
               </TouchableOpacity>
-              <TouchableOpacity title="gr" style={styles.greenbutton}>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel="Backgorund color"
+                accessibilityHint="Let’s you choose to change the background color of chat message"
+                onPress={() => this.setState({ backgroundColor: "#B9C6AE" })}
+                style={styles.greenbutton}
+              >
                 <Text></Text>
               </TouchableOpacity>
             </View>
@@ -73,6 +106,9 @@ export default class Start extends React.Component {
             {/* Button to navigate to chat screen and load name state to chat screen*/}
 
             <AwesomeButton
+              accessible={true}
+              accessibilityLabel="Start Chat"
+              accessibilityHint="start chatting"
               textSize={16}
               justifyContent="center"
               width={265}
@@ -81,10 +117,9 @@ export default class Start extends React.Component {
               backgroundColor="#757083"
               hieght={40}
               onPress={() =>
-                this.props.navigation.navigate("Chat", {
-                  name: this.state.name,
-                })
+                this.onPressChat(this.state.name, this.state.backgroundColor)
               }
+              style={[styles.button]}
             >
               Start Chatting
             </AwesomeButton>
@@ -146,7 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "300",
     color: "#757083",
-    // opacity: 100,
+
     marginLeft: 10,
     justifyContent: "center",
   },
@@ -194,5 +229,9 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 100,
     backgroundColor: "#B9C6AE",
+  },
+  logo: {
+    marginTop: 20,
+    marginBottom: 20,
   },
 });
