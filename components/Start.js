@@ -46,7 +46,7 @@ export default class Start extends React.Component {
               <TextInput
                 style={{
                   height: 50,
-                  width: 260,
+                  width: "100%",
                   margin: 5,
                   borderColor: "blue",
                   borderRadius: 10,
@@ -104,18 +104,18 @@ export default class Start extends React.Component {
             </View>
 
             {/* Button to navigate to chat screen and load name state to chat screen*/}
-
+            <View>
             <AwesomeButton
               accessible={true}
               accessibilityLabel="Start Chat"
               accessibilityHint="start chatting"
               textSize={16}
               justifyContent="center"
-              width={265}
+              width="100%"
               fontWeight={600}
               marginLeft={5}
               backgroundColor="#757083"
-              hieght={40}
+              height={50}
               onPress={() =>
                 this.onPressChat(this.state.name, this.state.backgroundColor)
               }
@@ -123,6 +123,7 @@ export default class Start extends React.Component {
             >
               Start Chatting
             </AwesomeButton>
+            </View>
           </View>
 
           <View style={styles.boxspace2}></View>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 10,
   },
   box2: {
-    flex: 40,
+    flex: 25,
     justifyContent: "center",
     textAlign: "center",
     backgroundColor: "white",
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
-    padding: 30,
+    padding: 20,
   },
   boxSpace1: {
     flex: 20,
@@ -181,14 +182,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "300",
     color: "#757083",
+    width: "100%",
+    padding: 10,
 
-    marginLeft: 10,
     justifyContent: "center",
   },
   rowofbuttons: {
     flex: 1,
     flexDirection: "row",
-    padding: 1,
+    padding: 10,
+    width: "100%"
   },
   blackbutton: {
     width: 55,
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    margin: 5,
+    margin: 12,
     borderRadius: 100,
     backgroundColor: "#090C08",
   },
@@ -206,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    margin: 5,
+    margin: 12,
     borderRadius: 100,
     backgroundColor: "#474056",
   },
@@ -216,7 +219,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    margin: 5,
+    margin: 15,
     borderRadius: 100,
     backgroundColor: "#8A95A5",
   },
@@ -226,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    margin: 5,
+    margin: 12,
     borderRadius: 100,
     backgroundColor: "#B9C6AE",
   },
