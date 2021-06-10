@@ -4,7 +4,8 @@ provide users with a chat interface and options to share images and their
 location.
 
 This app was developed using expo.  
-To run, type 'npm install', then when dependencies are done loading (expo included), type 'npm start' or 'expo start'.
+To run, type 'npm install', then when dependencies are done loading (expo included), 
+type 'npm start' or 'expo start'.
 Enter your name and choose your screen color then press start chat button.
 
 Technical Requirements:
