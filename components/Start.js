@@ -22,7 +22,6 @@ export default class Start extends React.Component {
 
   onPressChat = (name, backgroundColor) => {
     if (name == "") {
-      console.log(name);
       return Alert.alert("Please Enter a Name .");
     }
     this.props.navigation.navigate("Chat", {

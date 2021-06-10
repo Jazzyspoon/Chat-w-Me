@@ -2,8 +2,16 @@ import React from "react";
 import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 export default class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+    };
+  }
+
   render() {
     const { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: name });
     let backgroundColor = this.props.route.params.backgroundColor;
 
     return (
