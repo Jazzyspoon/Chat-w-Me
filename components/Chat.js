@@ -8,10 +8,13 @@ export default class Chat extends React.Component {
       name: "",
     };
   }
-
-  render() {
+  componentDidMount() {
     const { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
+  }
+  render() {
+    // const { name } = this.props.route.params;
+    // this.props.navigation.setOptions({ title: name });
     let backgroundColor = this.props.route.params.backgroundColor;
 
     return (
