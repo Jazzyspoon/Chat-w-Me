@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   ImageBackground,
   View,
@@ -29,6 +29,7 @@ export default class Start extends React.Component {
       backgroundColor: `${backgroundColor}`,
     });
   };
+
   //start screen with username creation
   render() {
     return (

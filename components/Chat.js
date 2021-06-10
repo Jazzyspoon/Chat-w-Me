@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 export default class Chat extends React.Component {
