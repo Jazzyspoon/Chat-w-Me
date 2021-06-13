@@ -42,7 +42,6 @@ export default class Chat extends React.Component {
           user: {
             _id: 1,
             name: `${name}`,
-
             avatar: "https://placeimg.com/140/140/any",
           },
         },
@@ -50,12 +49,15 @@ export default class Chat extends React.Component {
     });
   }
 
+  // send button functionality
+
   onSend(messages = []) {
     this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
 
+  // Stylized bubbles for chat
   renderBubble(props) {
     return (
       <Bubble
@@ -98,6 +100,7 @@ export default class Chat extends React.Component {
               _id: 1,
             }}
           ></GiftedChat>
+          {/* Hiding button for future use or placeholder */}
           {/* <TouchableOpacity
             accessible={true}
             accessibilityLabel="More options"
