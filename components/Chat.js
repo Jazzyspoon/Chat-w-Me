@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Platform, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
 export default class Chat extends React.Component {
@@ -29,13 +36,13 @@ export default class Chat extends React.Component {
         },
         {
           _id: 2,
-          text: "This conversation is saved in logs",
-
+          text: `Hi, ${name}, You are now chatting.`,
           createdAt: new Date(),
           system: true,
           user: {
             _id: 1,
-            name: name,
+            name: `${name}`,
+
             avatar: "https://placeimg.com/140/140/any",
           },
         },
@@ -56,6 +63,7 @@ export default class Chat extends React.Component {
         wrapperStyle={{
           left: {
             backgroundColor: "white",
+            color: "black",
           },
           right: {
             backgroundColor: "blue",
@@ -75,36 +83,50 @@ export default class Chat extends React.Component {
         style={{
           flex: 1,
           justifyContent: "center",
-
           backgroundColor: backgroundColor,
         }}
       >
-        {/* Button to navigate back to start screen - tab is mad eavailable */}
-        {/* <AwesomeButton
-          marginLeft="auto"
-          marginRight="auto"
-          textSize={20}
-          justifyContent="center"
-          width={190}
-          backgroundColor="green"
-          hieght={40}
-          onPress={() => this.props.navigation.navigate("Start")}
-        >
-          Go To Start Screen
-        </AwesomeButton> */}
+        <View style={[styles.rowofchatinput]}>
+          <GiftedChat
+            accessible={true}
+            accessibilityLabel="Start Chat"
+            accessibilityHint="start chatting"
+            renderBubble={this.renderBubble.bind(this)}
+            messages={this.state.messages}
+            onSend={(messages) => this.onSend(messages)}
+            user={{
+              _id: 1,
+            }}
+          ></GiftedChat>
+          {/* <TouchableOpacity
+            accessible={true}
+            accessibilityLabel="More options"
+            accessibilityHint="Lets you choose to send an image or your geolocation."
+            accessibilityRole="button"
+            onPress={this._onPress}
+            style={styles.button}
+          >
+            <Text></Text>
+          </TouchableOpacity> */}
 
-        <GiftedChat
-          renderBubble={this.renderBubble.bind(this)}
-          messages={this.state.messages}
-          onSend={(messages) => this.onSend(messages)}
-          user={{
-            _id: 1,
-          }}
-        />
-        {Platform.OS === "android" ? (
-          <KeyboardAvoidingView behavior="height" />
-        ) : null}
+          {Platform.OS === "android" ? (
+            <KeyboardAvoidingView behavior="height" />
+          ) : null}
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: 30,
+    height: 30,
+    borderRadius: 100,
+    backgroundColor: "green",
+  },
+  rowofchatinput: {
+    flex: 1,
+    flexDirection: "row",
+  },
+});

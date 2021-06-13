@@ -60,6 +60,9 @@ export default class Start extends React.Component {
                 onChangeText={(name) => this.setState({ name })}
                 value={this.state.name}
                 placeholder="Enter Your Name..."
+                accessible={true}
+                accessibilityLabel="Input Name"
+                accessibilityHint="Input Name"
               />
             </View>
             <View>
@@ -70,8 +73,10 @@ export default class Start extends React.Component {
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel="Background color"
-                accessibilityHint="change the background color of chat message"
-                onPress={() => this.setState({ backgroundColor: "#090C08" })}
+                accessibilityHint="change the background color of chat message to black"
+                onPress={() =>
+                  this.setState({ backgroundColor: "#090C08", color: "white" })
+                }
                 style={styles.blackbutton}
               >
                 <Text></Text>
@@ -79,8 +84,10 @@ export default class Start extends React.Component {
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel="Background color"
-                accessibilityHint="Let’s you choose to change the background color of chat message"
-                onPress={() => this.setState({ backgroundColor: "#474056" })}
+                accessibilityHint="change the background color of chat message to brown"
+                onPress={() =>
+                  this.setState({ backgroundColor: "#474056", color: "white" })
+                }
                 style={styles.brownbutton}
               >
                 <Text></Text>
@@ -88,17 +95,21 @@ export default class Start extends React.Component {
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel="Background color"
-                accessibilityHint="Let’s you choose to change the background color of chat message"
-                onPress={() => this.setState({ backgroundColor: "#8A95A5" })}
+                accessibilityHint="change the background color of chat message to grey"
+                onPress={() =>
+                  this.setState({ backgroundColor: "#8A95A5", color: "black" })
+                }
                 style={styles.greybutton}
               >
                 <Text></Text>
               </TouchableOpacity>
               <TouchableOpacity
                 accessible={true}
-                accessibilityLabel="Backgorund color"
-                accessibilityHint="Let’s you choose to change the background color of chat message"
-                onPress={() => this.setState({ backgroundColor: "#B9C6AE" })}
+                accessibilityLabel="Background color"
+                accessibilityHint="change the background color of chat message to green"
+                onPress={() =>
+                  this.setState({ backgroundColor: "#B9C6AE", color: "black" })
+                }
                 style={styles.greenbutton}
               >
                 <Text></Text>
@@ -117,9 +128,8 @@ export default class Start extends React.Component {
                 accessibilityHint="start chatting"
                 textSize={16}
                 justifyContent="center"
-                width="100%"
+                width={242}
                 fontWeight={600}
-                marginLeft={5}
                 marginTop={50}
                 backgroundColor="#757083"
                 height={50}
@@ -200,6 +210,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     paddingBottom: 15,
+    justifyContent: "space-evenly",
   },
   blackbutton: {
     width: 45,
