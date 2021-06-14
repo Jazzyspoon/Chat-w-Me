@@ -55,7 +55,7 @@ export default class Chat extends React.Component {
   componentDidMount() {
     const { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
-    firebase.auth().onAuthStateChanged();
+    // firebase.auth().onAuthStateChanged();
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
