@@ -9,7 +9,7 @@ import {
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import firebase from "firebase";
 import "firebase/firestore";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 
 // const firebase = require("firebase");
