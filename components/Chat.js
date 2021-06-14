@@ -9,6 +9,26 @@ import {
 } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
+const firebase = require("firebase");
+require("firebase/firestore");
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDTHEJbw3-OSBAHpLauLX-30tdQulx4HwM",
+  authDomain: "chat-w-me-e1812.firebaseapp.com",
+  projectId: "chat-w-me-e1812",
+  storageBucket: "chat-w-me-e1812.appspot.com",
+  messagingSenderId: "81969105946",
+  appId: "1:81969105946:web:368a72d5967139441755a3",
+  measurementId: "G-1GLSYV8Z75",
+};
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+this.referenceChatMessages = firebase.firestore().collection("messages");
+
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
