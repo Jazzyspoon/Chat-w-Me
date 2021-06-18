@@ -106,6 +106,7 @@ export default class Chat extends React.Component {
   //function add message
   addMessage() {
     const message = this.state.messages[0];
+
     this.referenceChatMessages.add({
       _id: message._id,
       uid: this.state.uid,
@@ -132,6 +133,7 @@ export default class Chat extends React.Component {
           avatar: data.user.avatar,
         },
       });
+      console.log(data.text);
     });
     this.setState({
       messages,
@@ -210,6 +212,7 @@ export default class Chat extends React.Component {
           accessible={true}
           accessibilityLabel="Start Chat"
           accessibilityHint="start chatting"
+          renderInputToolbar={this.renderInputToolbar}
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
