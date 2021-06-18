@@ -59,7 +59,6 @@ export default class Chat extends React.Component {
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
-        console.log("online");
         // Authenticates user
         this.authUnsubscribe = firebase
           .auth()
@@ -81,7 +80,6 @@ export default class Chat extends React.Component {
               .onSnapshot(this.onCollectionUpdate);
           });
       } else {
-        console.log("offline");
         this.setState({ isConnected: false });
         this.getMessages();
       }
@@ -108,7 +106,6 @@ export default class Chat extends React.Component {
   //function add message
   addMessage() {
     const message = this.state.messages[0];
-    console.log(message);
     this.referenceChatMessages.add({
       _id: message._id,
       uid: this.state.uid,
@@ -118,7 +115,7 @@ export default class Chat extends React.Component {
     });
   }
 
-  //retrieve the current data in  collection and store it in your state messages
+  //retrieve the current data and store it in your state messages
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
     // go through each document
@@ -135,7 +132,6 @@ export default class Chat extends React.Component {
           avatar: data.user.avatar,
         },
       });
-      console.log(data.text);
     });
     this.setState({
       messages,
@@ -156,8 +152,6 @@ export default class Chat extends React.Component {
 
   // adds new message to  array
   onSend(messages = []) {
-    console.log("kj");
-    console.log(messages);
     this.setState(
       (previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
