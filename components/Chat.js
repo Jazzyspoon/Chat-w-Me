@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Platform, KeyboardAvoidingView, YellowBox } from "react-native";
+import { View, Platform, KeyboardAvoidingView } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -29,7 +29,11 @@ export default class Chat extends React.Component {
 
     this.state = {
       messages: [],
-      user: {},
+      user: {
+        _id: "",
+        name: "",
+        avatar: "",
+      },
       uid: 0,
       isConnected: false,
       image: null,
@@ -37,7 +41,7 @@ export default class Chat extends React.Component {
     };
   }
 
-  async getMessages() {
+  getMessages = async () => {
     let messages = "";
     try {
       messages = (await AsyncStorage.getItem("messages")) || [];
@@ -47,17 +51,16 @@ export default class Chat extends React.Component {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   async componentDidMount() {
     // Check onlime status
-    NetInfo.fetch().then((state) => {
-      var isConnected = state.isConnected;
-      this.setState({
-        isConnected,
-      });
-      this.getMessages();
-      if (isConnected) {
+    const { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: `${name}'s Chat` });
+    NetInfo.fetch().then((connection) => {
+      if (connection.isConnected) {
+        this.setState({ isConnected: true });
+
         // firebase call
         this.authUnsubscribe = firebase
           .auth()
@@ -68,40 +71,43 @@ export default class Chat extends React.Component {
             // Update user
             this.setState({
               uid: user.uid,
+              user: {
+                _id: user.uid,
+                name: name,
+                avatar: "https://placeimg.com/140/140/any",
+              },
+              messages: [],
             });
+
+            // update collection
+            this.unsubscribeUser = this.referenceMessages
+              .orderBy("createdAt", "desc")
+              .onSnapshot(this.onCollectionUpdate);
           });
-        // update collection
-        this.unsubscribe = this.referenceMessages
-          .orderBy("createdAt", "desc")
-          .onSnapshot(this.onCollectionUpdate);
+      } else {
+        this.setState({ isConnected: false });
+        this.getMessages();
       }
     });
-
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: `${this.props.route.params.name} + ' is here!'`,
-          createdAt: new Date(),
-          system: true,
-        },
-      ],
-    });
-    YellowBox.ignoreWarning(["Setting a timer"]);
   }
   //query for stored msgs
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    // Map throug documents
+    // goes through each document
     querySnapshot.forEach((doc) => {
+      // gets QueryDocumentSnapshot's data
       let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || null,
         createdAt: data.createdAt.toDate(),
-        user: data.user,
-        image: data.image,
-        location: data.location,
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar,
+        },
+        image: data.image || null,
+        location: data.location || null,
       });
     });
     this.setState({
@@ -129,32 +135,18 @@ export default class Chat extends React.Component {
     this.addMessage(messages);
   }
 
-  // Add new msg to database
-  addMessage(message) {
-    const { _id, createdAt, text, user, image, location } = message[0];
-    this.referenceMessages.add({
-      _id: _id,
-      createdAt: createdAt,
-      text: text || null,
-      user: {
-        _id: user._id,
-        name: user.name,
-      },
-      image: image || null,
-      location: location || null,
+  // adds new message to server DB
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceChatMessages.add({
+      _id: message._id,
+      uid: this.state.uid,
+      createdAt: message.createdAt,
+      text: message.text || null,
+      user: message.user,
+      image: message.image || null,
+      location: message.location || null,
     });
-  }
-  // save msg for ofline access
-
-  async saveMessages() {
-    try {
-      await AsyncStorage.setItem(
-        "messages",
-        JSON.stringify(this.state.messages)
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
   }
 
   // Allow to delete msgs
@@ -174,12 +166,12 @@ export default class Chat extends React.Component {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: "#99F99F",
-            color: "black",
+            backgroundColor: "green",
+            color: "white",
           },
           left: {
-            backgroundColor: "#99FFFf",
-            color: "black",
+            backgroundColor: "blue",
+            color: "white",
           },
         }}
       />
@@ -223,9 +215,10 @@ export default class Chat extends React.Component {
   };
 
   render() {
+    // props user's Name
+    const { color } = this.props.route.params;
     const { messages, uid } = this.state;
-    const { name, color } = this.props.route.params;
-    this.props.navigation.setOptions({ title: name });
+
     // props user's Name
 
     return (

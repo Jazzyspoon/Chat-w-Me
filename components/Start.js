@@ -15,23 +15,26 @@ export default class Start extends React.Component {
   constructor(props) {
     super(props),
       (this.state = {
-        backgroundColor: "",
+        colorChoice: "",
         name: "",
+        colors: ["#090C08", "#474056", "#8A95A5", "#B9C6AE"],
       });
   }
   // set the color and user name when chat button is pressed.
-  onPressChat = (name, backgroundColor) => {
+  onPressChat = (name, colorChoice) => {
     if (name == "") {
       return Alert.alert("Please Enter a Name .");
     }
     this.props.navigation.navigate("Chat", {
       name: `${name}`,
-      backgroundColor: `${backgroundColor}`,
+      backgroundColor: `${colorChoice}`,
     });
   };
 
   //start screen with username creation
   render() {
+    const { navigation } = this.props;
+    const { name, colors, colorChoice } = this.state;
     return (
       <View style={styles.container}>
         <ImageBackground source={image} style={styles.image}>
@@ -58,7 +61,7 @@ export default class Start extends React.Component {
                   fontSize: 16,
                 }}
                 onChangeText={(name) => this.setState({ name })}
-                value={this.state.name}
+                value={name}
                 placeholder="Enter Your Name..."
                 accessible={true}
                 accessibilityLabel="Input Name"
@@ -68,8 +71,25 @@ export default class Start extends React.Component {
             <View>
               <Text style={styles.choose}>Choose background Color:</Text>
             </View>
-            {/* row of buttons for screen color choices */}
+            {/* Create buttons for user to choose background color */}
             <View style={styles.rowofbuttons}>
+              {colors.map((color) => (
+                <View
+                  style={[
+                    styles.colorBorder,
+                    colorChoice === color ? { borderColor: "#757083" } : null,
+                  ]}
+                  key={color}
+                >
+                  <TouchableOpacity
+                    onPress={() => this.setState({ colorChoice: color })}
+                    style={[styles.colorButton, { backgroundColor: color }]}
+                  />
+                </View>
+              ))}
+            </View>
+            {/* row of buttons for screen color choices */}
+            {/* <View style={styles.rowofbuttons}>
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel="Background color"
@@ -114,7 +134,7 @@ export default class Start extends React.Component {
               >
                 <Text></Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {/* Button to navigate to chat screen and load name state to chat screen*/}
             <View
@@ -134,7 +154,10 @@ export default class Start extends React.Component {
                 backgroundColor="#757083"
                 height={50}
                 onPress={() =>
-                  this.onPressChat(this.state.name, this.state.backgroundColor)
+                  navigation.navigate("Chat", {
+                    name: name,
+                    color: colorChoice,
+                  })
                 }
                 style={[styles.button]}
               >
@@ -251,5 +274,19 @@ const styles = StyleSheet.create({
     margin: 12,
     borderRadius: 100,
     backgroundColor: "#B9C6AE",
+  },
+  colorBorder: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderStyle: "solid",
+    borderColor: "#fff",
+    borderRadius: 100,
+    padding: 3,
+  },
+  colorButton: {
+    height: 45,
+    width: 45,
+    borderRadius: 50,
   },
 });
