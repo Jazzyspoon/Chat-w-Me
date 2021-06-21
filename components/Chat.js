@@ -1,19 +1,16 @@
 import React from "react";
-import { View, Platform, KeyboardAvoidingView, StyleSheet } from "react-native";
-import { CameraPhotoButton } from "./cameraphotobutton";
-import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
-import firebase from "firebase";
-import "firebase/firestore";
+import { View, Platform, KeyboardAvoidingView, YellowBox } from "react-native";
+import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import MapView from "react-native-maps";
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import CustomFunctions from "./CustomActions";
+const firebase = require("firebase");
+require("firebase/firestore");
 
 export default class Chat extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     // Initialize and connects Firebase
     if (!firebase.apps.length) {
@@ -27,9 +24,8 @@ export default class Chat extends React.Component {
         measurementId: "G-1GLSYV8Z75",
       });
     }
-    // create a reference to your Firestore collection
-    //This stores and retrieves the chat messages users send.
-    this.referenceChatMessages = firebase.firestore().collection("messages");
+    // Retrive msg
+    this.referenceMessages = firebase.firestore().collection("messages");
 
     this.state = {
       messages: [],
@@ -40,7 +36,7 @@ export default class Chat extends React.Component {
       location: null,
     };
   }
-  //added componentdidmount
+
   async getMessages() {
     let messages = "";
     try {
@@ -91,6 +87,7 @@ export default class Chat extends React.Component {
         },
       ],
     });
+    YellowBox.ignoreWarning(["Setting a timer"]);
   }
   //query for stored msgs
   onCollectionUpdate = (querySnapshot) => {
@@ -116,7 +113,7 @@ export default class Chat extends React.Component {
 
   componentWillUnmount() {
     this.authUnsubscribe();
-    //this.unsubscribe();
+    this.unsubscribe();
   }
 
   //store sent msgs
@@ -178,11 +175,11 @@ export default class Chat extends React.Component {
         wrapperStyle={{
           right: {
             backgroundColor: "#99F99F",
-            color: "#ffffff",
+            color: "black",
           },
           left: {
             backgroundColor: "#99FFFf",
-            color: "#ffffff",
+            color: "black",
           },
         }}
       />
@@ -222,31 +219,29 @@ export default class Chat extends React.Component {
   }
 
   renderActions = (props) => {
-    return <CameraPhotoButton {...props} />;
+    return <CustomFunctions {...props} />;
   };
 
   render() {
-    //to load color choice from previous screen
-    let backgroundColor = this.props.route.params.backgroundColor;
-    const { name } = this.props.route.params;
     const { messages, uid } = this.state;
+    const { name, color } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
+    // props user's Name
 
     return (
-      <View style={[styles.mainview, { backgroundColor: backgroundColor }]}>
+      <View style={{ flex: 1, backgroundColor: color }}>
         <GiftedChat
-          accessible={true}
-          accessibilityLabel="Start Chat"
-          accessibilityHint="start chatting"
-          renderInputToolbar={this.renderInputToolbar}
           renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar}
+          messages={messages}
           renderCustomView={this.renderCustomView}
           renderActions={this.renderActions}
-          messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
-          user={this.state.user}
-        ></GiftedChat>
-
+          user={{
+            _id: uid,
+            name: name,
+          }}
+        />
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}
@@ -254,9 +249,3 @@ export default class Chat extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  mainview: {
-    flex: 1,
-  },
-});

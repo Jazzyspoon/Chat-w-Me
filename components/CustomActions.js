@@ -7,7 +7,7 @@ import * as Location from "expo-location";
 import firebase from "firebase";
 import "firebase/firestore";
 
-export class CameraPhotoButton extends React.Component {
+export default class CustomFunctions extends React.Component {
   // Creating Functions for users like Location, Img share
 
   onActionPress = () => {
@@ -102,6 +102,7 @@ export class CameraPhotoButton extends React.Component {
 
       const uriParse = uri.split("/");
       const uriName = uriParse[uriParse.length - 1];
+
       const promise = [];
       const ref = firebase.storage().ref();
       const uploadTask = ref.child(`${uriName}`).put(blob);
@@ -120,7 +121,9 @@ export class CameraPhotoButton extends React.Component {
   // Permission for location
 
   getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.askAsync(
+      Permissions.LOCATION_BACKGROUND
+    );
     if (status === "granted") {
       let result = await Location.getCurrentPositionAsync({});
 
@@ -170,6 +173,6 @@ const styles = StyleSheet.create({
   },
 });
 
-CameraPhotoButton.contextTypes = {
+CustomFunctions.contextTypes = {
   actionSheet: PropTypes.func,
 };
