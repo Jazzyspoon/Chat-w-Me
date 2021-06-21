@@ -5,7 +5,10 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
+  Button,
 } from "react-native";
+import { ImagePickerButton } from "./imagepickerbutton";
+import { Camera } from "./camera";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import firebase from "firebase";
 import "firebase/firestore";
@@ -195,6 +198,7 @@ export default class Chat extends React.Component {
       />
     );
   }
+
   //notifies if offline
   renderInputToolbar = (props) => {
     if (this.state.isConnected === false) {
@@ -218,7 +222,10 @@ export default class Chat extends React.Component {
           onSend={(messages) => this.onSend(messages)}
           user={this.state.user}
         ></GiftedChat>
-
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ImagePickerButton />
+          <Camera />
+        </View>
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}
