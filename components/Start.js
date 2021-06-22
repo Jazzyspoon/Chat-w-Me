@@ -42,8 +42,10 @@ export default class Start extends React.Component {
           <View style={styles.boxspace2}>
             <Text style={styles.texttitle}>Chat w/Me</Text>
           </View>
+
           {/* added views for spacing */}
           <View style={styles.boxSpace1}></View>
+
           {/* main box holding inputs and buttons */}
           <View style={styles.box2}>
             <View>
@@ -71,6 +73,7 @@ export default class Start extends React.Component {
             <View>
               <Text style={styles.choose}>Choose background Color:</Text>
             </View>
+
             {/* Create buttons for user to choose background color */}
             <View style={styles.rowofbuttons}>
               {colors.map((color) => (
@@ -88,53 +91,6 @@ export default class Start extends React.Component {
                 </View>
               ))}
             </View>
-            {/* row of buttons for screen color choices */}
-            {/* <View style={styles.rowofbuttons}>
-              <TouchableOpacity
-                accessible={true}
-                accessibilityLabel="Background color"
-                accessibilityHint="change the background color of chat message to black"
-                onPress={() =>
-                  this.setState({ backgroundColor: "#090C08", color: "white" })
-                }
-                style={styles.blackbutton}
-              >
-                <Text></Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                accessible={true}
-                accessibilityLabel="Background color"
-                accessibilityHint="change the background color of chat message to brown"
-                onPress={() =>
-                  this.setState({ backgroundColor: "#474056", color: "white" })
-                }
-                style={styles.brownbutton}
-              >
-                <Text></Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                accessible={true}
-                accessibilityLabel="Background color"
-                accessibilityHint="change the background color of chat message to grey"
-                onPress={() =>
-                  this.setState({ backgroundColor: "#8A95A5", color: "black" })
-                }
-                style={styles.greybutton}
-              >
-                <Text></Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                accessible={true}
-                accessibilityLabel="Background color"
-                accessibilityHint="change the background color of chat message to green"
-                onPress={() =>
-                  this.setState({ backgroundColor: "#B9C6AE", color: "black" })
-                }
-                style={styles.greenbutton}
-              >
-                <Text></Text>
-              </TouchableOpacity>
-            </View> */}
 
             {/* Button to navigate to chat screen and load name state to chat screen*/}
             <View
@@ -148,7 +104,7 @@ export default class Start extends React.Component {
                 accessibilityHint="start chatting"
                 textSize={16}
                 justifyContent="center"
-                width={290}
+                width={250}
                 fontWeight={600}
                 marginTop={10}
                 backgroundColor="#757083"
@@ -199,7 +155,7 @@ const styles = StyleSheet.create({
     flex: 10,
   },
   box2: {
-    flex: 16,
+    flex: 24,
     justifyContent: "center",
     textAlign: "center",
     backgroundColor: "white",
@@ -234,46 +190,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     justifyContent: "space-evenly",
-  },
-  blackbutton: {
-    width: 45,
-    height: 45,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    margin: 12,
-    borderRadius: 100,
-    backgroundColor: "#090C08",
-  },
-  brownbutton: {
-    width: 45,
-    height: 45,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    margin: 12,
-    borderRadius: 100,
-    backgroundColor: "#474056",
-  },
-  greybutton: {
-    width: 45,
-    height: 45,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    margin: 12,
-    borderRadius: 100,
-    backgroundColor: "#8A95A5",
-  },
-  greenbutton: {
-    width: 45,
-    height: 45,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    margin: 12,
-    borderRadius: 100,
-    backgroundColor: "#B9C6AE",
   },
   colorBorder: {
     justifyContent: "center",
