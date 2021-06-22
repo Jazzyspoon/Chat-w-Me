@@ -148,11 +148,11 @@ export default class Start extends React.Component {
                 accessibilityHint="start chatting"
                 textSize={16}
                 justifyContent="center"
-                width={242}
+                width={290}
                 fontWeight={600}
-                marginTop={50}
+                marginTop={10}
                 backgroundColor="#757083"
-                height={50}
+                height={60}
                 onPress={() =>
                   navigation.navigate("Chat", {
                     name: name,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     flex: 10,
   },
   box2: {
-    flex: 25,
+    flex: 16,
     justifyContent: "center",
     textAlign: "center",
     backgroundColor: "white",
@@ -230,9 +230,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   rowofbuttons: {
-    flex: 1,
+    flex: 5,
     flexDirection: "row",
-    paddingBottom: 15,
+
     justifyContent: "space-evenly",
   },
   blackbutton: {
@@ -283,10 +283,12 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderRadius: 100,
     padding: 3,
+    height: 50,
+    width: 50,
   },
   colorButton: {
-    height: 45,
-    width: 45,
+    height: 50,
+    width: 50,
     borderRadius: 50,
   },
 });
