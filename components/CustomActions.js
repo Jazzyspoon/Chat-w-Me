@@ -8,8 +8,7 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 export default class CustomFunctions extends React.Component {
-  // Creating Functions for users like Location, Img share
-
+  // Creating Functions for users: Location, Image share,  image capture, and cancel
   onActionPress = () => {
     const options = ["Send Image", "Take Photo", "Send Location", "Cancel"];
 
@@ -19,7 +18,6 @@ export default class CustomFunctions extends React.Component {
       {
         options,
         cancelButtonIndex,
-        useNativeDriver: true,
       },
       async (buttonIndex) => {
         switch (buttonIndex) {
@@ -35,13 +33,11 @@ export default class CustomFunctions extends React.Component {
     );
   };
 
-  // Permission request before use any of Phone function
-
+  // send image and get permission request before use any of Phone function
   pickImage = async () => {
     try {
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
-
       if (status === "granted") {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -58,20 +54,17 @@ export default class CustomFunctions extends React.Component {
     }
   };
 
-  // Permission for camera
-
+  // take photo and get permission for camera use
   takePhoto = async () => {
     try {
       const { status } = await Permissions.askAsync(
         Permissions.CAMERA,
         Permissions.MEDIA_LIBRARY
       );
-
       if (status === "granted") {
         let result = await ImagePicker.launchCameraAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
         }).catch((error) => console.log(error));
-
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
@@ -113,21 +106,18 @@ export default class CustomFunctions extends React.Component {
     // gets image URL from Firebase storage
     return await snapshot.ref.getDownloadURL();
   };
-  // Permission for location
 
+  // Show and get permission for location
   getLocation = async () => {
     // requests permission to access user location
     const { status } = await Location.requestForegroundPermissionsAsync();
-
     try {
       if (status === "granted") {
         const result = await Location.getCurrentPositionAsync({}).catch(
           (error) => console.log(error)
         );
-
         const latitude = JSON.stringify(result.coords.latitude);
         const longitude = JSON.stringify(result.coords.longitude);
-
         if (result) {
           this.props.onSend({
             location: {
@@ -160,6 +150,7 @@ export default class CustomFunctions extends React.Component {
   }
 }
 
+//stylings
 const styles = StyleSheet.create({
   container: {
     width: 26,
@@ -167,14 +158,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 10,
   },
-
   wrapper: {
     borderRadius: 15,
     borderColor: "#b2b2b2",
     borderWidth: 2,
     flex: 1,
   },
-
   iconText: {
     color: "#2b2b2b",
     fontWeight: "bold",
@@ -184,6 +173,7 @@ const styles = StyleSheet.create({
   },
 });
 
+//prop actions
 CustomFunctions.contextTypes = {
   actionSheet: PropTypes.func,
 };
