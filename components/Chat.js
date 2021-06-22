@@ -42,7 +42,7 @@ export default class Chat extends React.Component {
   async componentDidMount() {
     // Check onlime status
     const { name } = this.props.route.params;
-    this.props.navigation.setOptions({ title: `${name} is chatting` });
+    this.props.navigation.setOptions({ title: `${name}` });
 
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
@@ -76,7 +76,7 @@ export default class Chat extends React.Component {
         this.getMessages();
       }
     });
-    LogBox.ignoreLogs(["Animated.event"]);
+    LogBox.ignoreLogs(["Animated.event", "expo-permissions"]);
   }
 
   //query for stored msgs
