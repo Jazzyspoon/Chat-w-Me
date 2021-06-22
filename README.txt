@@ -3,9 +3,10 @@ To build a chat app for mobile devices using React Native. The app will
 provide users with a chat interface and options to share images and their
 location.
 
-This app was developed using expo and react native.  
-To run,
-1. type 'npm install' on the command line (from the root folder).
+This app was developed using expo and react native with Gifted Chat.  
+
+To run:
+1. from the root folder, type 'npm install' on the command line (for the version listed in this, check the package.json).
 2. when dependencies are done loading (expo included), 
 type 'npm start' or 'expo start'.
 3. using expo, send it to your phone or use a simulator like Xcode(ios) or Android Simulator (win).
