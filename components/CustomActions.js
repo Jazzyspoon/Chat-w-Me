@@ -36,19 +36,20 @@ export default class CustomFunctions extends React.Component {
 
   // Permission request before use any of Phone function
 
-  // Permission for galery
-
   pickImage = async () => {
     try {
-      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status === "granted") {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: "Images",
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
         }).catch((error) => console.log(error));
 
+        // save image to DB if process not cancelled
         if (!result.cancelled) {
-          this.storeImage(result.uri);
+          const imageUrl = await this.uploadImageFetch(result.uri);
+          this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -67,11 +68,12 @@ export default class CustomFunctions extends React.Component {
 
       if (status === "granted") {
         let result = await ImagePicker.launchCameraAsync({
-          mediaTypes: "Images",
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
         }).catch((error) => console.log(error));
 
         if (!result.cancelled) {
-          this.storeImage(result.uri);
+          const imageUrl = await this.uploadImageFetch(result.uri);
+          this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -79,68 +81,76 @@ export default class CustomFunctions extends React.Component {
     }
   };
 
-  // Settimg up Imge converting to BLOB
-  // Uploading and storeging in data
-  storeImage = async (uri) => {
+  // uploads images to Firebase in blob format
+  uploadImageFetch = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      // creates new XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (error) {
+        console.log(error);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      // opens connection to retrieve image data
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    // creates unique filenames for Firebase storage
+    const imageNameBefore = uri.split("/");
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    // creates reference to Firebase storage
+    const ref = firebase.storage().ref().child(`${imageName}`);
+    const snapshot = await ref.put(blob);
+    // closes connection
+    blob.close();
+
+    // gets image URL from Firebase storage
+    return await snapshot.ref.getDownloadURL();
+  };
+  // Permission for location
+
+  getLocation = async () => {
+    // requests permission to access user location
+    const { status } = await Location.requestForegroundPermissionsAsync();
+
     try {
-      const { props } = this.props;
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function (e) {
-          console.log(e);
-          reject(new TypeError("Request Failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", uri, true);
-        xhr.send(null);
-      });
+      if (status === "granted") {
+        const result = await Location.getCurrentPositionAsync({}).catch(
+          (error) => console.log(error)
+        );
 
-      // creating name for file
+        const latitude = JSON.stringify(result.coords.latitude);
+        const longitude = JSON.stringify(result.coords.longitude);
 
-      const uriParse = uri.split("/");
-      const uriName = uriParse[uriParse.length - 1];
-
-      const promise = [];
-      const ref = firebase.storage().ref();
-      const uploadTask = ref.child(`${uriName}`).put(blob);
-      promise.push(uploadTask);
-
-      Promise.all(promise).then(async (tasks) => {
-        blob.close();
-        const imageUrl = await uploadTask.snapshot.ref.getDownloadURL();
-        this.props.onSend({ image: imageUrl });
-      });
+        if (result) {
+          this.props.onSend({
+            location: {
+              latitude,
+              longitude,
+            },
+          });
+        }
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Permission for location
-
-  getLocation = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.LOCATION_BACKGROUND
-    );
-    if (status === "granted") {
-      let result = await Location.getCurrentPositionAsync({});
-
-      if (result) {
-        this.props.onSend({
-          location: {
-            latitude: result.coords.latitude,
-            longitude: result.coords.longitude,
-          },
-        });
-      }
-    }
-  };
-
   render() {
     return (
-      <TouchableOpacity style={[styles.container]} onPress={this.onActionPress}>
+      <TouchableOpacity
+        style={[styles.container]}
+        onPress={this.onActionPress}
+        accessible={true}
+        accessibilityLabel="More options"
+        accessibilityHint="Choose to send an image from your media library, a photo taken with your camera or your geolocation"
+        accessibilityRole="Button"
+      >
         <View style={[styles.wrapper, this.props.wrapperStyle]}>
           <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
         </View>

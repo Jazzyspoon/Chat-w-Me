@@ -11,6 +11,17 @@ require("firebase/firestore");
 export default class Chat extends React.Component {
   constructor() {
     super();
+    this.state = {
+      messages: [],
+      uid: 0,
+      user: {
+        _id: "",
+        name: "",
+        avatar: "",
+      },
+      isConnected: false,
+      image: null,
+    };
 
     // Initialize and connects Firebase
     if (!firebase.apps.length) {
@@ -25,50 +36,25 @@ export default class Chat extends React.Component {
       });
     }
     // Retrive msg
-    this.referenceMessages = firebase.firestore().collection("messages");
-
-    this.state = {
-      messages: [],
-      user: {
-        _id: "",
-        name: "",
-        avatar: "",
-      },
-      uid: 0,
-      isConnected: false,
-      image: null,
-      location: null,
-    };
+    this.referenceChatMessages = firebase.firestore().collection("messages");
   }
-
-  getMessages = async () => {
-    let messages = "";
-    try {
-      messages = (await AsyncStorage.getItem("messages")) || [];
-      this.setState({
-        messages: JSON.parse(messages),
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   async componentDidMount() {
     // Check onlime status
     const { name } = this.props.route.params;
-    this.props.navigation.setOptions({ title: `${name}'s Chat` });
+    this.props.navigation.setOptions({ title: `${name} is chatting` });
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
 
-        // firebase call
+        // authenticates user with firebase
         this.authUnsubscribe = firebase
           .auth()
           .onAuthStateChanged(async (user) => {
             if (!user) {
-              user = await firebase.auth().signInAnonymously();
+              await firebase.auth().signInAnonymously();
             }
-            // Update user
+
             this.setState({
               uid: user.uid,
               user: {
@@ -79,8 +65,8 @@ export default class Chat extends React.Component {
               messages: [],
             });
 
-            // update collection
-            this.unsubscribeUser = this.referenceMessages
+            // listens for changes to DB
+            this.unsubscribeChatUser = this.referenceChatMessages
               .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
@@ -90,6 +76,7 @@ export default class Chat extends React.Component {
       }
     });
   }
+
   //query for stored msgs
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
@@ -119,21 +106,20 @@ export default class Chat extends React.Component {
 
   componentWillUnmount() {
     this.authUnsubscribe();
-    this.unsubscribe();
+    this.unsubscribeChatUser();
   }
 
-  //store sent msgs
-  onSend(messages = []) {
-    this.setState(
-      (previousState) => ({
-        messages: GiftedChat.append(previousState.messages, messages),
-      }),
-      () => {
-        this.saveMessages();
-      }
-    );
-    this.addMessage(messages);
-  }
+  getMessages = async () => {
+    let messages = "";
+    try {
+      messages = (await AsyncStorage.getItem("messages")) || [];
+      this.setState({
+        messages: JSON.parse(messages),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   // adds new message to server DB
   addMessage() {
@@ -148,17 +134,41 @@ export default class Chat extends React.Component {
       location: message.location || null,
     });
   }
-
-  // Allow to delete msgs
-
-  async deleteMessages() {
+  // saves new message to client-side storage
+  saveMessages = async () => {
     try {
-      await AsyncStorage.removeItem("messages");
+      await AsyncStorage.setItem(
+        "messages",
+        JSON.stringify(this.state.messages)
+      );
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
+  // Allow to delete msgs
 
+  deleteMessages = async () => {
+    try {
+      await AsyncStorage.removeItem("messages");
+      this.setState({
+        messages: [],
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  //store sent msgs
+  onSend(messages = []) {
+    this.setState(
+      (previousState) => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }),
+      () => {
+        this.addMessage();
+        this.saveMessages();
+      }
+    );
+  }
   // customize text bubbles
   renderBubble = (props) => {
     return (
@@ -185,38 +195,35 @@ export default class Chat extends React.Component {
     }
   };
 
-  renderCustomView(props) {
+  renderCustomView = (props) => {
     const { currentMessage } = props;
     if (currentMessage.location) {
-      const longitude = parseInt(currentMessage.location.longitude);
-      const latitude = parseInt(currentMessage.location.latitude);
       return (
         <MapView
           style={{
-            width: 250,
-            height: 150,
-            borderRadiuse: 15,
-            margin: 5,
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3,
           }}
           region={{
-            longitude,
-            latitude,
-            longitudeDelta: 0.0421,
+            latitude: Number(currentMessage.location.latitude),
+            longitude: Number(currentMessage.location.longitude),
             latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
         />
       );
     }
     return null;
-  }
-
+  };
   renderActions = (props) => {
     return <CustomFunctions {...props} />;
   };
 
   render() {
     // props user's Name
-    const { color } = this.props.route.params;
+    const { color, name } = this.props.route.params;
     const { messages, uid } = this.state;
 
     // props user's Name
@@ -226,14 +233,11 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar}
-          messages={messages}
+          messages={this.state.messages}
           renderCustomView={this.renderCustomView}
           renderActions={this.renderActions}
           onSend={(messages) => this.onSend(messages)}
-          user={{
-            _id: uid,
-            name: name,
-          }}
+          user={this.state.user}
         />
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
