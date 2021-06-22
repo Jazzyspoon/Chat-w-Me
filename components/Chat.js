@@ -35,6 +35,7 @@ export default class Chat extends React.Component {
         measurementId: "G-1GLSYV8Z75",
       });
     }
+
     // Retrive msg
     this.referenceChatMessages = firebase.firestore().collection("messages");
   }
@@ -44,6 +45,7 @@ export default class Chat extends React.Component {
     const { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: `${name}` });
 
+    //set connection to firebase
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
@@ -55,7 +57,6 @@ export default class Chat extends React.Component {
             if (!user) {
               await firebase.auth().signInAnonymously();
             }
-
             this.setState({
               uid: user.uid,
               user: {
@@ -76,15 +77,15 @@ export default class Chat extends React.Component {
         this.getMessages();
       }
     });
+    //added to remove dependency incompatibility warnings
     LogBox.ignoreLogs(["Animated.event", "expo-permissions"]);
   }
 
   //query for stored msgs
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    // goes through each document
     querySnapshot.forEach((doc) => {
-      // gets QueryDocumentSnapshot's data
+      // retrieves QueryDocumentSnapshot's data
       let data = doc.data();
       messages.push({
         _id: data._id,
@@ -105,12 +106,12 @@ export default class Chat extends React.Component {
   };
 
   // Disconnect when close app
-
   componentWillUnmount() {
     this.authUnsubscribe();
     this.unsubscribeChatUser();
   }
 
+  //retrieve the messages
   getMessages = async () => {
     let messages = "";
     try {
@@ -136,6 +137,7 @@ export default class Chat extends React.Component {
       location: message.location || null,
     });
   }
+
   // saves new message to client-side storage
   saveMessages = async () => {
     try {
@@ -147,8 +149,8 @@ export default class Chat extends React.Component {
       console.log(error.message);
     }
   };
-  // Allow to delete msgs
 
+  // Allow to delete msgs
   deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem("messages");
@@ -171,6 +173,7 @@ export default class Chat extends React.Component {
       }
     );
   }
+
   // customize text bubbles
   renderBubble = (props) => {
     return (
@@ -190,6 +193,7 @@ export default class Chat extends React.Component {
     );
   };
 
+  //render toolbar if connected online, disable if disconnected
   renderInputToolbar = (props) => {
     if (this.state.isConnected == false) {
     } else {
@@ -197,6 +201,7 @@ export default class Chat extends React.Component {
     }
   };
 
+  //map rendering
   renderCustomView = (props) => {
     const { currentMessage } = props;
     if (currentMessage.location) {
@@ -219,6 +224,8 @@ export default class Chat extends React.Component {
     }
     return null;
   };
+
+  //load custom functions and actions from customactions.js
   renderActions = (props) => {
     return <CustomFunctions {...props} />;
   };
@@ -227,8 +234,6 @@ export default class Chat extends React.Component {
     // props user's Name
     const { color, name } = this.props.route.params;
     const { messages, uid } = this.state;
-
-    // props user's Name
 
     return (
       <View style={{ flex: 1, backgroundColor: color }}>

@@ -20,6 +20,7 @@ export default class Start extends React.Component {
         colors: ["#090C08", "#474056", "#8A95A5", "#B9C6AE"],
       });
   }
+
   // set the color and user name when chat button is pressed.
   onPressChat = (name, colorChoice) => {
     if (name == "") {
