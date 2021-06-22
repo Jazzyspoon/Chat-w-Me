@@ -19,6 +19,7 @@ export default class CustomFunctions extends React.Component {
       {
         options,
         cancelButtonIndex,
+        useNativeDriver: true,
       },
       async (buttonIndex) => {
         switch (buttonIndex) {

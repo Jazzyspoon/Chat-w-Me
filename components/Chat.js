@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Platform, KeyboardAvoidingView } from "react-native";
+import { View, Platform, KeyboardAvoidingView, LogBox } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -43,6 +43,7 @@ export default class Chat extends React.Component {
     // Check onlime status
     const { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: `${name} is chatting` });
+
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
@@ -75,6 +76,7 @@ export default class Chat extends React.Component {
         this.getMessages();
       }
     });
+    LogBox.ignoreLogs(["Animated.event"]);
   }
 
   //query for stored msgs
