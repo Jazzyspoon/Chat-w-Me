@@ -2,8 +2,9 @@ Objective:
 To build a chat app for mobile devices using React Native. The app will
 provide users with a chat interface and options to share images and their
 location.
-<img src="https://github.com/Jazzyspoon/Chat-w-Me/blob/main/chatappscreenshot.jpg"></img>
 This app was developed using expo and react native with Gifted Chat.  
+
+<img src="https://github.com/Jazzyspoon/Chat-w-Me/blob/main/chatappscreenshot.jpg"></img>
 
 To run:
 1. from the root folder, type 'npm install' on the command line (for the version listed in this, check the package.json).
