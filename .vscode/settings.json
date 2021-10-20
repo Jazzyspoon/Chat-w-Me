@@ -3,6 +3,8 @@
     "backgroundimage",
     "boxspace",
     "firestore",
+    "grpc",
+    "netinfo",
     "rowofbuttons",
     "texttitle"
   ]
